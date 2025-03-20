@@ -4,6 +4,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 
+import todoRoute from "./routes/todoRoute.js";
+
 const app = express();
 dotenv.config()
 
@@ -14,10 +16,7 @@ app.use(cookieParser()); // Enable cookie parsing
 const CONNECTION_URL = process.env.CONNECTION_URL
 const PORT = process.env.PORT
 
-
-app.get("/", (req, res) => {
-    res.send("Welcome to the MERN To-Do List Backend!");
-});
+app.use("/service/todo", todoRoute)
 
 mongoose.set("strictQuery", true)
 
