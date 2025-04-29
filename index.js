@@ -9,9 +9,9 @@ import todoRoute from "./routes/todoRoute.js";
 const app = express();
 dotenv.config()
 
-app.use(express.json()); // Built-in body-parser for parsing JSON
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(cookieParser()); // Enable cookie parsing
+app.use(express.json()); 
+app.use(cors()); 
+app.use(cookieParser());
 
 const CONNECTION_URL = process.env.CONNECTION_URL
 const PORT = process.env.PORT
