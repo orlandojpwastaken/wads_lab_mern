@@ -30,6 +30,11 @@ function validatePassword(password) {
     return regex.test(password)
 }
 
+// Generates refresh tokens
+function createRefreshToken(payload) {
+    return jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET, {expiresIn: '1d'})
+}
+
 // Sign up method (along with the rest of the condition checks)
 export const signUp = async (req,res) => {
     try {
@@ -76,5 +81,55 @@ export const signUp = async (req,res) => {
             })
     }   catch (error) {
             return res.status(500).json({message: error.message});
+    }
+}
+
+// Sign in method
+export const signIn = async (req, res) => {
+    try {
+        const {email, password} = req.body;
+
+        const user = await Users.findOne({email});
+
+        if (!email || !password) return res.status(400).json({message: "Please fill in all of the fields"})
+            
+        if (!user) return res.status(400).json({message: "Invalid Credentials"})
+
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch) return res.status(400).json({message: "Invalid Credentials"})
+        
+        const refresh_token = createRefreshToken({ id:user._id })
+
+        const expiry = 24 * 60 * 60 * 1000 // 1 day expiry period
+
+        res.cookie('refreshtoken', refresh_token, {
+            httpOnly: true,
+            path: '/api/user/refresh_token',
+            maxAge: expiry,
+            expires: new Date(Date.now( + expiry))
+        })
+        
+        res.json({
+            message: "Sign In successfully!",
+            user: {
+                id: user._id,
+                name: user.name,
+                email: user.email
+            }
+        })
+    }   catch (error) {
+        return res.status(500).json({message: error.message});
+    }
+}
+
+// User Information Method
+export const userInfo = async (req, res) => {
+    try {
+        const userId = req.user.id
+        const userInfo = await Users.findById(userId).select("-password")
+
+        res.json(userInfo)
+    }   catch (error) {
+        return res.status(500).json({message:error.message});
     }
 }
