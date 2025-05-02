@@ -236,7 +236,11 @@ export const userMailSend = (to, url, titleTxt, btnTxt, res) => {
     }
 
     transporter.sendMail(mailOptions, (err, info) => {
-        if (err) return err
-        return info
+        if (err) {
+            console.error('Email sending error:', err);
+            return err;
+        }
+        console.log('Email sent successfully:', info);
+        return info;
     })
 }

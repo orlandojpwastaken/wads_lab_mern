@@ -68,9 +68,13 @@ export const signUp = async (req,res) => {
 
             const url = `${DEFAULT_CLIENT_URL}/user/activate/${refreshToken}`;
 
-            userMailSend(email, url, "Verify your email address", "Confirm Email")
-
-            res.json({ message: "Register Success! Please activate your email to start" });
+            try {
+                await userMailSend(email, url, "Verify your email address", "Confirm Email")
+                res.json({ message: "Register Success! Please activate your email to start" });
+            } catch (emailError) {
+                console.error('Email sending failed:', emailError);
+                res.status(500).json({ message: "Registration successful but email sending failed. Please try logging in." });
+            }
         } catch (error) {
             return res.status(500).json({ message: error.message });
         }
