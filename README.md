@@ -147,4 +147,47 @@ The API documentation is available at `/todolist/api-docs` when the server is ru
 - JWT for authentication
 - Nodemailer for email service
 - Swagger for API documentation
-- bcrypt for password hashing 
+- bcrypt for password hashing
+
+## Docker Deployment
+
+### Prerequisites
+- Docker installed on your system
+- Docker Compose installed on your system
+
+### Steps to Deploy
+
+1. Create a `.env` file in the root directory with the following variables:
+   ```
+   CONNECTION_URL=mongodb://mongodb:27017/todolist
+   PORT=5000
+   EMAIL_USER=your_gmail_address
+   EMAIL_PASSWORD=your_gmail_app_password
+   DEFAULT_CLIENT_URL=http://localhost:5000
+   REFRESH_TOKEN_SECRET=your_refresh_token_secret
+   ```
+
+2. Build and start the containers:
+   ```bash
+   docker-compose up --build
+   ```
+
+3. To run in detached mode:
+   ```bash
+   docker-compose up -d
+   ```
+
+4. To stop the containers:
+   ```bash
+   docker-compose down
+   ```
+
+5. To view logs:
+   ```bash
+   docker-compose logs -f
+   ```
+
+### Accessing the Application
+- Backend API: http://localhost:5000
+- API Documentation: http://localhost:5000/todolist/api-docs
+- MongoDB: mongodb://localhost:27017 
